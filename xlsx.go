@@ -3,14 +3,13 @@ package xlsx
 import (
 	"fmt"
 
-	logger "github.com/mguzelevich/go-ext-log"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/tealeg/xlsx/v3"
 )
 
 func Open(name string, input *xlsx.File) (*XlsxFile, error) {
-	logger.Log.WithFields(log.Fields{
+	log.WithFields(log.Fields{
 		"name": name,
 	}).Infof("open xlsx file")
 
@@ -30,7 +29,7 @@ func Open(name string, input *xlsx.File) (*XlsxFile, error) {
 				x, y := c.GetCoordinates()
 				value, err := c.FormattedValue()
 				if err != nil {
-					logger.Log.Errorf("(%d, %d) %v", x, y, err.Error())
+					log.Errorf("(%d, %d) %v", x, y, err.Error())
 				} else {
 					valueString := fmt.Sprint(value)
 					if rowIdx == 0 {

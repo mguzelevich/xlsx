@@ -17,9 +17,7 @@ import (
 )
 
 var (
-	Stdout = log.New()
-	Stderr = log.New()
-	Log    = log.New()
+	Log = log.New()
 
 	appStartedAt = time.Now()
 
@@ -67,11 +65,7 @@ func init() {
 
 	level, _ := log.ParseLevel(*logLevel)
 	Log, _ = logger.Init(level, *logFile)
-	Stderr = logger.Stderr
-	Stdout = logger.Stdout
-	// l := log.WithFields(log.Fields{
-	// 	"thread": "postman",
-	// })
+	logger.Apply(Log)
 	Log.Infof("level: %v", level)
 
 	os.Args = flag.Args()
