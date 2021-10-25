@@ -7,7 +7,7 @@ import (
 
 	"github.com/tealeg/xlsx/v3"
 
-	logger "github.com/mguzelevich/go-ext-log"
+	log "github.com/sirupsen/logrus"
 )
 
 type xlsxStream struct {
@@ -113,7 +113,7 @@ func (x *xlsxSheet) Header() *xlsxHeader {
 		x, y := c.GetCoordinates()
 		value, err := c.FormattedValue()
 		if err != nil {
-			logger.Log.Errorf("(%d, %d) %v", x, y, err.Error())
+			log.Errorf("(%d, %d) %v", x, y, err.Error())
 		} else {
 			valueString := fmt.Sprint(value)
 			hdr.values[x] = valueString
@@ -150,7 +150,7 @@ func (x *xlsxSheet) Rows() xlsxRows {
 				value, err := c.FormattedValue()
 				// log.Printf("(%d, %d) %v %v", x, y, value, err)
 				if err != nil {
-					logger.Log.Errorf("(%d, %d) %v", x, y, err)
+					log.Errorf("(%d, %d) %v", x, y, err)
 				} else {
 					valueString := fmt.Sprint(value)
 					if valueString != "" {
@@ -201,7 +201,7 @@ func (s *XlsxSheet) Headers() []string {
 }
 
 func Open(name string, input *xlsx.File) (*XlsxFile, error) {
-	logger.Log.WithFields(log.Fields{
+	log.WithFields(log.Fields{
 		"name": name,
 	}).Infof("open xlsx file")
 
@@ -221,7 +221,7 @@ func Open(name string, input *xlsx.File) (*XlsxFile, error) {
 				x, y := c.GetCoordinates()
 				value, err := c.FormattedValue()
 				if err != nil {
-					logger.Log.Errorf("(%d, %d) %v", x, y, err.Error())
+					log.Errorf("(%d, %d) %v", x, y, err.Error())
 				} else {
 					valueString := fmt.Sprint(value)
 					if rowIdx == 0 {

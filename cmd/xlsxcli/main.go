@@ -21,7 +21,7 @@ var (
 
 	appStartedAt = time.Now()
 
-	logLevel = flag.String("log-level", "fatal", "log level: []")
+	logLevel = flag.String("log-level", "info", "log level: []")
 	logFile  = flag.String("log-file", "", "log file")
 
 	outputPrefix      string
