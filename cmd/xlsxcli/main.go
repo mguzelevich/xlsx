@@ -79,7 +79,7 @@ func init() {
 	level, _ := log.ParseLevel(*logLevel)
 	Log, _ = logger.Init(level, *logFile)
 	logger.Apply(Log)
-	log.Infof("level: %v", level)
+	log.Debugf("level: %v", level)
 
 	os.Args = flag.Args()
 
@@ -96,13 +96,13 @@ func one2many(db *ts.Database, sheetChan chan *sheetDesc, rowChan chan *ts.Row, 
 		case sh := <-sheetChan:
 			log.WithFields(log.Fields{
 				"sheet": sh,
-			}).Infof("sheet msg received")
+			}).Debugf("sheet msg received")
 			sheet = db.NewTable(fmt.Sprintf("%s / %s", sh.space, sh.name))
 			sheet.Init(ts.FieldsFromStrings(sh.headers)...)
 		case r := <-rowChan:
 			log.WithFields(log.Fields{
 				"row": r,
-			}).Infof("row msg received")
+			}).Debugf("row msg received")
 			sheet.Insert(r)
 			// case <-shutdownChan:
 			// 	log.WithFields(log.Fields{
@@ -125,7 +125,7 @@ func one2one(db *ts.Database, sheetChan chan *sheetDesc, rowChan chan *ts.Row, s
 		case r := <-rowChan:
 			log.WithFields(log.Fields{
 				"row": r,
-			}).Infof("row msg received")
+			}).Debugf("row msg received")
 
 			r.Join(tblRow)
 			sheet.Insert(r)
@@ -136,6 +136,49 @@ func one2one(db *ts.Database, sheetChan chan *sheetDesc, rowChan chan *ts.Row, s
 			// 	break
 		}
 	}
+}
+
+func _tst() error {
+	/*
+	p.s.Init(params.GdriveCredentials, params.GdriveToken)
+
+	if db, err := sql.Open("sqlite", "database.s3db"); err != nil {
+		log.Fatal(err)
+	} else {
+		p.DB = db
+	}
+
+	sh, _ := p.s.Sheets.ReadSpreadsheet(file.ID, true)
+
+	if _, err := p.DB.Exec("drop VIEW IF EXISTS source_data;"); err != nil {
+		log.Error(err)
+		return err
+	}
+
+	for _, table := range sh {
+		stmt := table.CreateTableStmt()
+		if _, err := p.DB.Exec(stmt); err != nil {
+			log.Debug(stmt)
+			log.Error(err)
+			return err
+		}
+
+		istmt := table.InsertAllStmt()
+		if _, err := p.DB.Exec(istmt); err != nil {
+			log.Debug(istmt)
+			log.Error(err)
+			return err
+		}
+	}
+
+	stmt := p.mld.CreateSourceViewStmt()
+	if _, err := p.DB.Exec(stmt); err != nil {
+		log.Debug(stmt)
+		log.Error(err)
+		return err
+	}
+	*/
+	return nil
 }
 
 func main() {
@@ -189,9 +232,7 @@ func main() {
 			}
 			sheetChan <- sd
 
-			log.WithFields(log.Fields{
-				"sheet": s,
-			}).Infof("sheet")
+			log.WithFields(log.Fields{"sheet": s}).Debugf("sheet")
 
 			firstRow := true
 			rIdx := 0
@@ -216,7 +257,7 @@ func main() {
 				// "path": file.Path,
 				// "headers": sheet.Headers(),
 				// "dump":    sheet.DumpAsJson(),
-			}).Infof("sheet processed")
+			}).Debugf("sheet processed")
 
 		}
 		close(shutdownChan)
@@ -226,7 +267,7 @@ func main() {
 			// "path": file.Path,
 			// "name": fileName,
 			// "id": file.ID,
-		}).Infof("file processed")
+		}).Debugf("file processed")
 	}
 
 	if mode == "one2many" {
